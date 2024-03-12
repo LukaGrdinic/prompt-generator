@@ -1,11 +1,25 @@
 import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { PromptGeneratorService } from '../services/prompt-generator.service';
-import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import { RouterModule } from '@angular/router';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'writing-sheet',
   templateUrl: './writing-sheet.component.html',
   styleUrl: './writing-sheet.component.scss',
+  standalone: true,
+  imports: [
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule
+  ],
+  providers: [PromptGeneratorService]
 })
 export class WritingSheetComponent {
   formGroup!: FormGroup;
