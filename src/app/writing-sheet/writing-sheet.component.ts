@@ -1,10 +1,21 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { PromptGeneratorService } from '../services/prompt-generator.service';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
+import { KeyCodes } from '../enums/KeyCodes.enum';
 
 @Component({
   selector: 'writing-sheet',
@@ -17,9 +28,9 @@ import {MatButtonModule} from '@angular/material/button';
     MatFormFieldModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
   ],
-  providers: [PromptGeneratorService]
+  providers: [PromptGeneratorService],
 })
 export class WritingSheetComponent {
   formGroup!: FormGroup;
@@ -78,13 +89,9 @@ export class WritingSheetComponent {
     // TODO: Make sure the user cant hold down delete or backspace key and just delete many characters
     this.cursorPosition = event.target.selectionStart;
     if (this.cursorPosition <= this.lockedContentLastIndex) {
-      // if shift key is being held
-      if ([17].includes(event.which)) {
+      if ([KeyCodes.Shift].includes(event.which)) {
         this.setCursorPositionToEnd();
-      } else if (
-        // if event keycode is backspace or delete
-        [8, 46].includes(event.which)
-      ) {
+      } else if ([KeyCodes.Backspace, KeyCodes.Delete].includes(event.which)) {
         /* TODO: Handle situation when backspace is held for a long time */
         if (!this.isBackspaceHeld) {
           this.storyBeforeBackspaceKeyUp = this.formGroup.get('story')?.value;
@@ -96,31 +103,32 @@ export class WritingSheetComponent {
 
   captureBeforeKeyUp() {
     this.storyBeforeKeyUp = this.formGroup.get('story')?.value;
-    console.log("Saved before key up happened", this.storyBeforeKeyUp);
   }
 
   onKeyUp(event: any) {
-    console.log("Key up happened");
     this.cursorPosition = event.target.selectionStart;
     if (this.cursorPosition < this.lockedContentLastIndex) {
       // if control key is being held
       if (event.ctrlKey) {
         this.setCursorPositionToEnd();
-      } else if (
-        // if event keycode is backspace or delete
-        [8, 46].includes(event.which)
-      ) {
+      } else if ([KeyCodes.Backspace, KeyCodes.Delete].includes(event.which)) {
         this.isBackspaceHeld = false;
         this.handleDeletionWhenBackspaceHeld();
-        // this.handleDeletion();
-      } else if (
-        // if event keycode is left, right, up, down, shift, control, home, end
-        [37, 38, 39, 40, 16, 17, 36, 35].includes(event.which)
+      } else if ([
+          KeyCodes.ArrowDown,
+          KeyCodes.ArrowLeft,
+          KeyCodes.ArrowRight,
+          KeyCodes.ArrowUp,
+          KeyCodes.Shift,
+          KeyCodes.Control,
+          KeyCodes.Home,
+          KeyCodes.End,
+        ].includes(event.which)
       ) {
         this.setCursorPositionToEnd();
       } else if (
         // event keycode is enter
-        [13].includes(event.which)
+        [KeyCodes.Enter].includes(event.which)
       ) {
         // do nothing
       } else {
@@ -130,7 +138,6 @@ export class WritingSheetComponent {
   }
 
   setCursorPositionToEnd() {
-    console.log("setting cursor position to end");
     const story = this.formGroup.get('story')?.value;
     const storyLength = story.length;
     this.storyElementRef.nativeElement.focus();
@@ -140,12 +147,6 @@ export class WritingSheetComponent {
     );
   }
 
-  handleDeletion() {
-    this.formGroup.get('story')?.setValue(this.storyBeforeKeyUp);
-    // trigger detect changes
-    // this.cdr.detectChanges();
-  }
-
   handleDeletionWhenBackspaceHeld() {
     this.formGroup.get('story')?.setValue(this.storyBeforeBackspaceKeyUp);
   }
@@ -153,7 +154,6 @@ export class WritingSheetComponent {
   handleCharactersAdded(cursorPosition: number) {
     // delete the caracter at the cursorPosition and set the cursor position to the end of the locked content
     const story: string = this.formGroup.get('story')?.value;
-    console.log('story', story);
     // trigger undo action
     const storyBeforeCursor = story.slice(0, cursorPosition);
     const storyAfterCursor = story.slice(cursorPosition);
@@ -179,7 +179,9 @@ export class WritingSheetComponent {
 
   checkIfStorySentenceEnded(story: string) {
     const punctiationMarks = ['.', '!', '?'];
-    const usedPunctiationMarks = punctiationMarks.filter((mark) => story.endsWith(mark));
+    const usedPunctiationMarks = punctiationMarks.filter((mark) =>
+      story.endsWith(mark)
+    );
     return usedPunctiationMarks.length > 0;
   }
 

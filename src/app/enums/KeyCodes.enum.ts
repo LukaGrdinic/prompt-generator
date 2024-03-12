@@ -1,0 +1,16 @@
+export enum KeyCodes {
+    ArrowDown = 40,
+    ArrowLeft = 37,
+    ArrowRight = 39,
+    ArrowUp = 38,
+    Backspace = 8,
+    Delete = 46,
+    Enter = 13,
+    Escape = 27,
+    Space = 32,
+    Tab = 9,
+    Home = 36,
+    End = 35,
+    Shift = 16,
+    Control = 17,
+}
