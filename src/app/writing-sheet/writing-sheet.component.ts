@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { PromptGeneratorService } from '../services/prompt-generator.service';
 import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
 
@@ -9,21 +9,26 @@ import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
 })
 export class WritingSheetComponent {
   formGroup!: FormGroup;
-
-  constructor(
-    private fb: FormBuilder,
-    private promptService: PromptGeneratorService
-  ) {
-    this.formGroup = this.fb.group({
-      story: '',
-    });
-  }
-
   intervalId: number | null = null;
   timeLeftInSeconds = 900;
   promptCounter = 0;
   lockedContentLastIndex = 0;
   storyBeforeKeyUp = '';
+  storyBeforeBackspaceKeyUp = '';
+  cursorPosition = 0;
+  isBackspaceHeld = false;
+
+  @ViewChild('story') storyElementRef!: ElementRef;
+
+  constructor(
+    private fb: FormBuilder,
+    private promptService: PromptGeneratorService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.formGroup = this.fb.group({
+      story: '',
+    });
+  }
 
   ngOnInit() {
     this.startTimer();
@@ -47,33 +52,91 @@ export class WritingSheetComponent {
     console.log('Three minutes have passed!');
   }
 
-  captureBeforeKeyUp() {
-    this.storyBeforeKeyUp =  this.formGroup.get('story')?.value;
+  onClick(event: any) {
+    this.cursorPosition = event.target.selectionStart;
+    if (this.cursorPosition < this.lockedContentLastIndex) {
+      this.setCursorPositionToEnd();
+    }
   }
 
-  onKeyUp(event: any) {
-    const cursorPosition = event.target.selectionStart;
-    if (cursorPosition < this.lockedContentLastIndex) {
-      console.log('event', event);
-      // if event keycode is backspace
-      if (event.which === 8) {
-        this.handleBackspace(cursorPosition);
+  onKeyDown(event: any) {
+    this.captureBeforeKeyUp();
+    // TODO: Make sure the user cant hold down delete or backspace key and just delete many characters
+    this.cursorPosition = event.target.selectionStart;
+    if (this.cursorPosition <= this.lockedContentLastIndex) {
+      // if shift key is being held
+      if ([17].includes(event.which)) {
+        this.setCursorPositionToEnd();
       } else if (
-        // if event keycode is left right up down
-        [37, 38, 39, 40].includes(event.which)
+        // if event keycode is backspace or delete
+        [8, 46].includes(event.which)
       ) {
-        // do nothing
-      } else {
-        this.handleCharactersEntered(cursorPosition);
+        /* TODO: Handle situation when backspace is held for a long time */
+        if (!this.isBackspaceHeld) {
+          this.storyBeforeBackspaceKeyUp = this.formGroup.get('story')?.value;
+          this.isBackspaceHeld = true;
+        }
       }
     }
   }
 
-  handleBackspace(cursorPosition: number) {
-    this.formGroup.get('story')?.setValue(this.storyBeforeKeyUp);
+  captureBeforeKeyUp() {
+    this.storyBeforeKeyUp = this.formGroup.get('story')?.value;
+    console.log("Saved before key up happened", this.storyBeforeKeyUp);
   }
 
-  handleCharactersEntered(cursorPosition: number) {
+  onKeyUp(event: any) {
+    console.log("Key up happened");
+    this.cursorPosition = event.target.selectionStart;
+    if (this.cursorPosition < this.lockedContentLastIndex) {
+      // if control key is being held
+      if (event.ctrlKey) {
+        this.setCursorPositionToEnd();
+      } else if (
+        // if event keycode is backspace or delete
+        [8, 46].includes(event.which)
+      ) {
+        this.isBackspaceHeld = false;
+        this.handleDeletionWhenBackspaceHeld();
+        // this.handleDeletion();
+      } else if (
+        // if event keycode is left, right, up, down, shift, control, home, end
+        [37, 38, 39, 40, 16, 17, 36, 35].includes(event.which)
+      ) {
+        this.setCursorPositionToEnd();
+      } else if (
+        // event keycode is enter
+        [13].includes(event.which)
+      ) {
+        // do nothing
+      } else {
+        this.handleCharactersAdded(this.cursorPosition);
+      }
+    }
+  }
+
+  setCursorPositionToEnd() {
+    console.log("setting cursor position to end");
+    const story = this.formGroup.get('story')?.value;
+    const storyLength = story.length;
+    this.storyElementRef.nativeElement.focus();
+    this.storyElementRef.nativeElement.setSelectionRange(
+      storyLength,
+      storyLength
+    );
+  }
+
+  handleDeletion() {
+    this.formGroup.get('story')?.setValue(this.storyBeforeKeyUp);
+    // trigger detect changes
+    // this.cdr.detectChanges();
+  }
+
+  handleDeletionWhenBackspaceHeld() {
+    this.formGroup.get('story')?.setValue(this.storyBeforeBackspaceKeyUp);
+  }
+
+  handleCharactersAdded(cursorPosition: number) {
     // delete the caracter at the cursorPosition and set the cursor position to the end of the locked content
     const story: string = this.formGroup.get('story')?.value;
     console.log('story', story);
@@ -89,7 +152,7 @@ export class WritingSheetComponent {
     this.formGroup.get('story')?.valueChanges.subscribe((story) => {
       if (
         this.checkStoryWordCountCheckpoint(story) &&
-        this.checkStorySentenceEnded(story)
+        this.checkIfStorySentenceEnded(story)
       ) {
         this.generateNewSentence();
       }
@@ -100,8 +163,10 @@ export class WritingSheetComponent {
     return story.length > 100 * this.promptCounter;
   }
 
-  checkStorySentenceEnded(story: string) {
-    return story.endsWith('.');
+  checkIfStorySentenceEnded(story: string) {
+    const punctiationMarks = ['.', '!', '?'];
+    const usedPunctiationMarks = punctiationMarks.filter((mark) => story.endsWith(mark));
+    return usedPunctiationMarks.length > 0;
   }
 
   generateNewSentence() {

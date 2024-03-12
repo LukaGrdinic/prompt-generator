@@ -2,10 +2,19 @@
 
 <!-- Writing sheet with word count -->
 <form #form="ngForm" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-    <mat-form-field class="form-field-full-width">
-        <textarea formControlName="story" (keydown)="captureBeforeKeyUp()" (keyup)="onKeyUp($event)" #story maxlength="1000" rows="20" matInput></textarea>
-        <mat-hint align="end">{{story.value.length}} / 1000</mat-hint>
-    </mat-form-field>
+  <mat-form-field class="form-field-full-width">
+    <textarea
+      formControlName="story"
+      (click)="onClick($event)"
+      (keydown)="onKeyDown($event)"
+      (keyup)="onKeyUp($event)"
+      #story
+      maxlength="1000"
+      rows="20"
+      matInput
+    ></textarea>
+    <mat-hint align="end">{{ story.value.length }} / 1000</mat-hint>
+  </mat-form-field>
 
-    <button mat-raised-button color="primary">Submit</button>
+  <button mat-raised-button color="primary">Submit</button>
 </form>
