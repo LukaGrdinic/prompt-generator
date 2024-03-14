@@ -1,10 +1,29 @@
-<mat-toolbar>
-  <span>Prompt Generator</span>
-</mat-toolbar>
+<header>
+  <mat-toolbar class="justify-between bg-peach text-white">
+    <a class="text-decoration-none text-white uppercase" routerLink="/">Home</a>
+    <div class="flex align-center gap-1 uppercase">
+      <ul class="list-horizontal text-white">
+        <li>
+          <a class="text-decoration-none text-white" routerLink="/">Prompts</a>
+        </li>
+        <li>
+          <a class="text-decoration-none text-white" routerLink="/">Library</a>
+        </li>
+        <li>
+          <a class="text-decoration-none text-white" routerLink="/">About Us</a>
+        </li>
+        <li>
+          <a class="text-decoration-none text-white" routerLink="/">Login</a>
+        </li>
+      </ul>
+      <button mat-flat-button color="primary">Sign Up Free</button>
+    </div>
+  </mat-toolbar>
+</header>
 
 <h1>Schroedinger’s Challenge</h1>
 <p>Write a short story in 15 minutes or at least try your best!</p>
 
 <main>
-    <router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </main>
