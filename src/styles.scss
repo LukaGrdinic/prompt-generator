@@ -11,7 +11,7 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$prompt-generator-primary: mat.define-palette(mat.$indigo-palette);
+$prompt-generator-primary: mat.define-palette(mat.$purple-palette, 900);
 $prompt-generator-accent: mat.define-palette(
   mat.$deep-orange-palette,
   A200,
@@ -41,6 +41,11 @@ $prompt-generator-theme: mat.define-light-theme(
 
 /* You can add global styles to this file, and also import other style files */
 
+@import './assets/styles/scss/colors.scss';
+@import './assets/styles/scss/container.scss';
+@import './assets/styles/scss/flex.scss';
+@import './assets/styles/scss/lists.scss';
+
 html,
 body {
   height: 100%;
@@ -48,34 +53,19 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: #0003;
 }
 
 // Tailwind like styles:
 
-.flex {
-  display: flex;
+.h-100 {
+  height: 100%;
+}	
+.w-100 {
+  width: 100%;
 }
 
-.gap-1 {
-  gap: 1rem;
-}
-
-.align-center {
-  align-items: center;
-}
-
-.justify-center {
-  justify-content: center;
-}
-.justify-between {
-  justify-content: space-between;
-}
-
-.list-horizontal {
-  list-style-type: none;
-  display: flex;
-  gap: 1rem;
+.block {
+  display: block;
 }
 
 .uppercase {
@@ -86,16 +76,3 @@ body {
   text-decoration: none;
 }
 
-// Colors
-
-// Backgrounds
-
-.bg-peach {
-  background-color: #FF674D !important;
-}
-
-// Text colors
-
-.text-white {
-  color: #fff !important;
-}

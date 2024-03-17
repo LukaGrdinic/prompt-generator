@@ -1,29 +1,35 @@
 <header>
-  <mat-toolbar class="justify-between bg-peach text-white">
-    <a class="text-decoration-none text-white uppercase" routerLink="/">Home</a>
-    <div class="flex align-center gap-1 uppercase">
-      <ul class="list-horizontal text-white">
-        <li>
-          <a class="text-decoration-none text-white" routerLink="/">Prompts</a>
-        </li>
-        <li>
-          <a class="text-decoration-none text-white" routerLink="/">Library</a>
-        </li>
-        <li>
-          <a class="text-decoration-none text-white" routerLink="/">About Us</a>
-        </li>
-        <li>
-          <a class="text-decoration-none text-white" routerLink="/">Login</a>
-        </li>
-      </ul>
-      <button mat-flat-button color="primary">Sign Up Free</button>
+  <mat-toolbar class="block bg-peach text-white">
+    <div class="container w-100 flex justify-between align-center">
+      <a class="text-decoration-none text-white uppercase" routerLink="/"
+        >Home</a
+      >
+      <div class="flex align-center gap-1 uppercase">
+        <ul class="list-horizontal text-white">
+          <li>
+            <a class="text-decoration-none text-white" routerLink="/"
+              >Prompts</a
+            >
+          </li>
+          <li>
+            <a class="text-decoration-none text-white" routerLink="/"
+              >Library</a
+            >
+          </li>
+          <li>
+            <a class="text-decoration-none text-white" routerLink="/"
+              >About Us</a
+            >
+          </li>
+          <li>
+            <a class="text-decoration-none text-white" routerLink="/">Login</a>
+          </li>
+        </ul>
+        <button mat-flat-button color="primary">Sign Up Free</button>
+      </div>
     </div>
   </mat-toolbar>
 </header>
-
-<h1>Schroedinger’s Challenge</h1>
-<p>Write a short story in 15 minutes or at least try your best!</p>
-
-<main>
+<main class="h-100">
   <router-outlet></router-outlet>
 </main>
