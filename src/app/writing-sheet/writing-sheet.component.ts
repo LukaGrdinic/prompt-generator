@@ -64,10 +64,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   }
 
   ngAfterViewInit() {
-    this.displayHeading();
-    this.startTimer();
-    this.trackStoryContentChanges();
-    this.generateNewSentence();
+   this.startChallenge();
   }
 
   async displayHeading() {
@@ -81,6 +78,13 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     await wait(1000);
     this.updateHeadingInnerText('Write!');
     this.enableSheet();
+  }
+
+  async startChallenge() {
+    await this.displayHeading();
+    this.startTimer();
+    this.trackStoryContentChanges();
+    this.generateNewSentence();
   }
 
   updateHeadingInnerText(innerText: string) {
@@ -212,11 +216,13 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   }
 
   generateNewSentence() {
+    this.disableSheet();
     this.promptCounter++;
     const sentance = this.promptService.generateSentence();
     const story = this.formGroup.get('story')?.value;
     this.formGroup.get('story')?.setValue(story + sentance);
     this.lockedContentLastIndex = this.formGroup.get('story')?.value.length;
+    this.enableSheet();
   }
 
   stopTimer() {
@@ -228,10 +234,10 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   }
 
   disableSheet() {
-    this.formGroup.get('story')?.disable();
+    this.formGroup.get('story')?.disable({ emitEvent: false });
   }
 
   enableSheet() {
-    this.formGroup.get('story')?.enable();
+    this.formGroup.get('story')?.enable({ emitEvent: false });
   }
 }
