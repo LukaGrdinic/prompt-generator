@@ -70,13 +70,13 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   async displayHeading() {
     this.disableSheet();
     await wait(1000);
-    this.updateHeadingInnerText('3');
+    this.updateHeadingInnerText('3...');
     await wait(1000);
-    this.updateHeadingInnerText('2');
+    this.updateHeadingInnerText('2...');
     await wait(1000);
-    this.updateHeadingInnerText('1');
+    this.updateHeadingInnerText('1...');
     await wait(1000);
-    this.updateHeadingInnerText('Write!');
+    this.updateHeadingInnerText('You’re on.');
     this.enableSheet();
   }
 

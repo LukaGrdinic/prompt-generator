@@ -1,9 +1,16 @@
 // Colors
 
+$tomatoOrange: #ff674d;
+$englishVioletPurple: #493657;
+$seashellBeige: #fff4ec;
+
 // Backgrounds
 
 .bg-peach {
-  background-color: #ff674d !important;
+  background-color: $tomatoOrange !important;
+}
+.bg-english-violet-purple {
+  background-color: $englishVioletPurple !important;
 }
 
 // Text colors
