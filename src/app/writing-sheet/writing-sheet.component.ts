@@ -1,7 +1,9 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { PromptGeneratorService } from '../services/prompt-generator.service';
@@ -16,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { KeyCodes } from '../enums/KeyCodes.enum';
+import { wait } from '../../utils/utils';
 
 @Component({
   selector: 'writing-sheet',
@@ -32,7 +35,7 @@ import { KeyCodes } from '../enums/KeyCodes.enum';
   ],
   providers: [PromptGeneratorService],
 })
-export class WritingSheetComponent {
+export class WritingSheetComponent implements OnInit, AfterViewInit{
   formGroup!: FormGroup;
   intervalId: number | null = null;
   timeLeftInSeconds = 900;
@@ -44,6 +47,7 @@ export class WritingSheetComponent {
   isBackspaceHeld = false;
 
   @ViewChild('story') storyElementRef!: ElementRef;
+  @ViewChild('heading') headingElementRef!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -56,9 +60,31 @@ export class WritingSheetComponent {
   }
 
   ngOnInit() {
+ 
+  }
+
+  ngAfterViewInit() {
+    this.displayHeading();
     this.startTimer();
     this.trackStoryContentChanges();
     this.generateNewSentence();
+  }
+
+  async displayHeading() {
+    this.disableSheet();
+    await wait(1000);
+    this.updateHeadingInnerText('3');
+    await wait(1000);
+    this.updateHeadingInnerText('2');
+    await wait(1000);
+    this.updateHeadingInnerText('1');
+    await wait(1000);
+    this.updateHeadingInnerText('Write!');
+    this.enableSheet();
+  }
+
+  updateHeadingInnerText(innerText: string) {
+    this.headingElementRef.nativeElement.innerText = innerText;
   }
 
   startTimer() {
@@ -199,5 +225,13 @@ export class WritingSheetComponent {
 
   onSubmit() {
     console.log(this.formGroup.value);
+  }
+
+  disableSheet() {
+    this.formGroup.get('story')?.disable();
+  }
+
+  enableSheet() {
+    this.formGroup.get('story')?.enable();
   }
 }
