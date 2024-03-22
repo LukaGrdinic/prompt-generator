@@ -19,6 +19,8 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { KeyCodes } from '../enums/KeyCodes.enum';
 import { wait } from '../../utils/utils';
+import { TimerComponent } from '../timer/timer.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'writing-sheet',
@@ -26,6 +28,8 @@ import { wait } from '../../utils/utils';
   styleUrl: './writing-sheet.component.scss',
   standalone: true,
   imports: [
+    TimerComponent,
+    CommonModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
@@ -37,8 +41,8 @@ import { wait } from '../../utils/utils';
 })
 export class WritingSheetComponent implements OnInit, AfterViewInit{
   formGroup!: FormGroup;
-  intervalId: number | null = null;
-  timeLeftInSeconds = 900;
+
+  isTimerVisible = false;
   promptCounter = 0;
   lockedContentLastIndex = 0;
   storyBeforeKeyUp = '';
@@ -80,31 +84,19 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     this.enableSheet();
   }
 
+  displayTimer() {
+    this.isTimerVisible = true;
+  }
+
   async startChallenge() {
     await this.displayHeading();
-    this.startTimer();
+    this.displayTimer();
     this.trackStoryContentChanges();
     this.generateNewSentence();
   }
 
   updateHeadingInnerText(innerText: string) {
     this.headingElementRef.nativeElement.innerText = innerText;
-  }
-
-  startTimer() {
-    this.intervalId = setInterval(() => {
-      this.timeLeftInSeconds -= 1;
-      if (this.timeLeftInSeconds % 180 === 0) {
-        this.notifyUserThreeMinutesHavePassed();
-      }
-      if (this.timeLeftInSeconds === 0) {
-        this.stopTimer();
-      }
-    }, 1000) as unknown as number;
-  }
-
-  notifyUserThreeMinutesHavePassed() {
-    console.log('Three minutes have passed!');
   }
 
   onClick(event: any) {
@@ -225,9 +217,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     this.enableSheet();
   }
 
-  stopTimer() {
-    clearInterval(this.intervalId as number);
-  }
+
 
   onSubmit() {
     console.log(this.formGroup.value);
@@ -239,5 +229,9 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
 
   enableSheet() {
     this.formGroup.get('story')?.enable({ emitEvent: false });
+  }
+
+  timeEnded() {
+    this.disableSheet();
   }
 }

@@ -1,24 +1,30 @@
-<h1 #heading>
-  Get Ready...
-</h1>
+<div>
+  <div class="container">
+    <h1 #heading>Get Ready...</h1>
 
-<!-- Timer -->
+    <!-- Timer -->
 
-<!-- Writing sheet with word count -->
-<form #form="ngForm" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-  <mat-form-field class="form-field-full-width">
-    <textarea
-      formControlName="story"
-      (click)="onClick($event)"
-      (keydown)="onKeyDown($event)"
-      (keyup)="onKeyUp($event)"
-      #story
-      maxlength="1000"
-      rows="20"
-      matInput
-    ></textarea>
-    <mat-hint align="end">{{ story.value.length }} / 1000</mat-hint>
-  </mat-form-field>
+    <div class="flex justify-end">
+      <timer [seconds]="60" *ngIf="isTimerVisible" (timeEnded)="timeEnded()"></timer>
+    </div>
 
-  <button mat-raised-button color="primary">Submit</button>
-</form>
+    <!-- Writing sheet with word count -->
+    <form #form="ngForm" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <mat-form-field class="form-field-full-width">
+        <textarea
+          formControlName="story"
+          (click)="onClick($event)"
+          (keydown)="onKeyDown($event)"
+          (keyup)="onKeyUp($event)"
+          #story
+          maxlength="1000"
+          rows="20"
+          matInput
+        ></textarea>
+        <mat-hint align="end">{{ story.value.length }} / 1000</mat-hint>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary">Submit</button>
+    </form>
+  </div>
+</div>
