@@ -3,6 +3,7 @@
 $tomatoOrange: #ff674d;
 $englishVioletPurple: #493657;
 $seashellBeige: #fff4ec;
+$sunflowerYellow: #ffcc00;
 
 // Backgrounds
 
@@ -15,6 +16,18 @@ $seashellBeige: #fff4ec;
 
 // Text colors
 
+.text-tomato-orange {
+  color: $tomatoOrange !important;
+}
+.text-english-violet-purple {
+  color: $englishVioletPurple !important;
+}
+.text-seashell-beige {
+  color: $seashellBeige !important;
+}
+.text-sunflower-yellow {
+  color: $sunflowerYellow !important;
+}
 .text-white {
   color: #fff !important;
 }

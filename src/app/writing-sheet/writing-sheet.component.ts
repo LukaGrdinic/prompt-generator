@@ -217,8 +217,6 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     this.enableSheet();
   }
 
-
-
   onSubmit() {
     console.log(this.formGroup.value);
   }

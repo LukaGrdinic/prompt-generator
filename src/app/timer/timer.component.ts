@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TwoDigitsPipe } from '../two-digits.pipe';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'timer',
   standalone: true,
   imports: [
+    CommonModule,
     TwoDigitsPipe
   ],
   templateUrl: './timer.component.html',
@@ -14,6 +16,9 @@ export class TimerComponent implements OnInit {
   private intervalId: number | null = null;
   @Input({ required: true }) seconds!: number;
   @Output() timeEnded = new EventEmitter<void>();
+
+  isTimerInWarningZone = false;
+  isTimerInDangerZone = false;
 
   ngOnInit() {
     this.initializeTimer();
@@ -29,6 +34,15 @@ export class TimerComponent implements OnInit {
   initializeTimer() {
     this.intervalId = setInterval(() => {
       this.seconds -= 1;
+      if (this.seconds < 30) {
+        this.isTimerInWarningZone = false;
+        this.isTimerInDangerZone = true;
+        return;
+      }
+      if (this.seconds < 60) {
+        this.isTimerInWarningZone = true;
+        return;
+      }
       if (this.seconds === 0) {
         this.stopTimer();
       }

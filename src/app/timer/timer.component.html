@@ -1,1 +1,8 @@
-<p>{{timeLeftInMinutes | twoDigits }}  : {{ timeLeftInSeconds | twoDigits}}</p>
+<p class="mb-1 fs-3" [ngClass]="{
+    'text-white': !isTimerInWarningZone && !isTimerInDangerZone,
+    'text-sunflower-yellow' : isTimerInWarningZone, 
+    'text-tomato-orange' : isTimerInDangerZone, 
+    }">
+    <span aria-label="Minutes left" class="box">{{timeLeftInMinutes | twoDigits }}</span> : 
+    <span aria-label="Seconds left" class="box">{{timeLeftInSeconds | twoDigits}}</span>
+</p>
