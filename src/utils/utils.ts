@@ -3,3 +3,8 @@ export function wait(milliseconds: number) {
     setTimeout(resolve, milliseconds);
   });
 }
+
+export function calculateWordCount(text: string) {
+  let words = text.match(/\w+/g) as RegExpMatchArray;
+  return words.length
+}

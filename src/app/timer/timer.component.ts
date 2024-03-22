@@ -34,6 +34,9 @@ export class TimerComponent implements OnInit {
   initializeTimer() {
     this.intervalId = setInterval(() => {
       this.seconds -= 1;
+      if (this.seconds === 0) {
+        this.stopTimer();
+      }
       if (this.seconds < 30) {
         this.isTimerInWarningZone = false;
         this.isTimerInDangerZone = true;
@@ -42,9 +45,6 @@ export class TimerComponent implements OnInit {
       if (this.seconds < 60) {
         this.isTimerInWarningZone = true;
         return;
-      }
-      if (this.seconds === 0) {
-        this.stopTimer();
       }
     }, 1000) as unknown as number;
   }

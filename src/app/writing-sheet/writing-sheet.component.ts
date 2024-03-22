@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   OnInit,
@@ -18,9 +17,10 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { KeyCodes } from '../enums/KeyCodes.enum';
-import { wait } from '../../utils/utils';
+import { wait, calculateWordCount } from '../../utils/utils';
 import { TimerComponent } from '../timer/timer.component';
 import { CommonModule } from '@angular/common';
+import { WordCountPipe } from '../word-count.pipe';
 
 @Component({
   selector: 'writing-sheet',
@@ -28,6 +28,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './writing-sheet.component.scss',
   standalone: true,
   imports: [
+    WordCountPipe,
     TimerComponent,
     CommonModule,
     MatButtonModule,
@@ -43,6 +44,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   formGroup!: FormGroup;
 
   isTimerVisible = false;
+  minWordCount = 300;
   promptCounter = 0;
   lockedContentLastIndex = 0;
   storyBeforeKeyUp = '';
@@ -52,11 +54,11 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
 
   @ViewChild('story') storyElementRef!: ElementRef;
   @ViewChild('heading') headingElementRef!: ElementRef;
+  @ViewChild('subheading') subheadingElementRef!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
     private promptService: PromptGeneratorService,
-    private cdr: ChangeDetectorRef
   ) {
     this.formGroup = this.fb.group({
       story: '',
@@ -97,6 +99,9 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
 
   updateHeadingInnerText(innerText: string) {
     this.headingElementRef.nativeElement.innerText = innerText;
+  }
+  updateSubheadingInnerText(innerText: string) {
+    this.subheadingElementRef.nativeElement.innerText = innerText;
   }
 
   onClick(event: any) {
@@ -196,7 +201,8 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   }
 
   checkStoryWordCountCheckpoint(story: string) {
-    return story.length > 100 * this.promptCounter;
+    const wordCount = calculateWordCount(story);
+    return wordCount > 100  * this.promptCounter;
   }
 
   checkIfStorySentenceEnded(story: string) {
@@ -231,5 +237,18 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
 
   timeEnded() {
     this.disableSheet();
+    this.isTimerVisible = false;
+    this.displayResults();
+  }
+  displayResults() {
+    const story = this.formGroup.get('story')?.value;
+    const wordCount = calculateWordCount(story);
+    if (wordCount > this.minWordCount) {
+      this.updateHeadingInnerText('Well, you actually did it.');
+      this.updateSubheadingInnerText('Bravo! Copy your story and continue working on it—or store it at the bottom of the cringe pile, you be the judge of that.')
+    } else {
+      this.updateHeadingInnerText('Are you OK?');
+      this.updateSubheadingInnerText('Well, time is up and you don’t seem to have successfully completed the task. In case we didn’t bore you to death, why not try again?')
+    }
   }
 }
