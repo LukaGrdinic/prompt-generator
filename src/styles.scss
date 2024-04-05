@@ -41,6 +41,7 @@ $prompt-generator-theme: mat.define-light-theme(
 
 /* You can add global styles to this file, and also import other style files */
 
+@import './assets/styles/scss/variables.scss';
 @import './assets/styles/scss/colors.scss';
 @import './assets/styles/scss/container.scss';
 @import './assets/styles/scss/fonts.scss';

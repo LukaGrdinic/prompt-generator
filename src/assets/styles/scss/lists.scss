@@ -10,7 +10,7 @@
 
 .list-bullets-purple li {
   position: relative;
-  padding-left: 1.5rem;
+  padding-left: 2rem;
   margin-bottom: 1rem;
 }
 
@@ -18,7 +18,7 @@
   content: '';
   position: absolute;
   left: 0;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.75rem;
+  height: 1.75rem;
   background: center / contain no-repeat url('/assets/images/bullet_point.png') ;
 }

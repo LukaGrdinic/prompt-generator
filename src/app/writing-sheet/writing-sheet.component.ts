@@ -73,6 +73,19 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
    this.startChallenge();
   }
 
+  async prepareWritingEnvironment() {
+    this.updateBodyBackground();
+    await this.displayHeading();
+  }
+
+  updateBodyBackground() {
+    // update css variable called bodyBackgroundColor
+    document.documentElement.style.setProperty(
+      '--bodyBackgroundColor',
+      'var(--englishVioletPurple)'
+    );
+  }
+
   async displayHeading() {
     this.disableSheet();
     await wait(1000);
@@ -91,7 +104,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   }
 
   async startChallenge() {
-    await this.displayHeading();
+    this.prepareWritingEnvironment();
     this.displayTimer();
     this.trackStoryContentChanges();
     this.generateNewSentence();

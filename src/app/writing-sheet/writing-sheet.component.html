@@ -6,7 +6,7 @@
     <!-- Timer -->
 
     <div class="flex justify-end">
-      <timer [seconds]="10" *ngIf="isTimerVisible" (timeEnded)="timeEnded()"></timer>
+      <timer [seconds]="600" *ngIf="isTimerVisible" (timeEnded)="timeEnded()"></timer>
     </div>
 
     <!-- Writing sheet with word count -->
@@ -21,7 +21,7 @@
           rows="20"
           matInput
         ></textarea>
-        <mat-hint align="end">{{ story.value | wordCount }} / {{minWordCount}}</mat-hint>
+        <mat-hint *ngIf="story.value" align="end">{{ story.value | wordCount }} / {{minWordCount}}</mat-hint>
       </mat-form-field>
 
       <button mat-raised-button color="primary">Submit</button>
