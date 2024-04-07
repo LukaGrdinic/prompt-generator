@@ -21,6 +21,8 @@ h1 {
     line-height: 1;
     margin-top: 1rem;
     margin-bottom: 2rem;
+    color: var(--headingColor);
+    transition: color 3s ease;
 }
 
 h2 {
@@ -30,6 +32,8 @@ h2 {
     font-weight: 400;
     font-style: normal;
     margin-bottom: 2rem;
+    color: var(--headingColor);
+    transition: color 3s ease;
 }
 h3 {
     margin-top: 0;
@@ -38,4 +42,14 @@ h3 {
     font-weight: 400;
     font-style: normal;
     margin-bottom: 2rem;
+    color: var(--headingColor);
+    transition: color 3s ease;
+}
+
+button {
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
 }

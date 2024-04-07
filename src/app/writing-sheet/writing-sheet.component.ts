@@ -21,6 +21,7 @@ import { wait, calculateWordCount } from '../../utils/utils';
 import { TimerComponent } from '../timer/timer.component';
 import { CommonModule } from '@angular/common';
 import { WordCountPipe } from '../word-count.pipe';
+import { DarkTheme, ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'writing-sheet',
@@ -59,6 +60,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   constructor(
     private fb: FormBuilder,
     private promptService: PromptGeneratorService,
+    private themeService: ThemeService
   ) {
     this.formGroup = this.fb.group({
       story: '',
@@ -74,16 +76,12 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   }
 
   async prepareWritingEnvironment() {
-    this.updateBodyBackground();
+    this.updateTheme();
     await this.displayHeading();
   }
 
-  updateBodyBackground() {
-    // update css variable called bodyBackgroundColor
-    document.documentElement.style.setProperty(
-      '--bodyBackgroundColor',
-      'var(--englishVioletPurple)'
-    );
+  updateTheme() {
+    this.themeService.updateTheme(new DarkTheme());
   }
 
   async displayHeading() {
