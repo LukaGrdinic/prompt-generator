@@ -1,3 +1,19 @@
 .form-field-full-width {
     width: 100%;
 }
+
+.folded-sheet {
+    position: absolute;
+    z-index: 100;
+    bottom: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    transform: translateX(16px);
+    background: linear-gradient(to bottom right, var(--seashellBeige) 50%, var(--bodyBackgroundColor) 50%);
+}
+
+.folded-sheet-hint {
+    transform: translate(-30px, -110px);
+    color: var(--gray)
+}

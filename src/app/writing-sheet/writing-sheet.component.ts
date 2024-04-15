@@ -102,7 +102,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   }
 
   async startChallenge() {
-    this.prepareWritingEnvironment();
+    await this.prepareWritingEnvironment();
     this.displayTimer();
     this.trackStoryContentChanges();
     this.generateNewSentence();
