@@ -19,6 +19,8 @@ export class PromptGeneratorService {
       case 2:
         this.schredingerSentenceCount++;
         return this.generateThirdSchredingerSentence();
+      case 3:
+        return ""; /* No new sentence generation */
       default:
         return this.generateFirstSchredingerSentence();
     }

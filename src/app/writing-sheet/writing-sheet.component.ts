@@ -233,6 +233,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     await this.displayNewSentence(sentance);
     this.lockedContentLastIndex = this.formGroup.get('story')?.value.length;
     this.enableSheet();
+    this.setCursorPositionToEnd();
   }
 
   async displayNewSentence(sentance: string) {
