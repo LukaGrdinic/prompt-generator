@@ -224,14 +224,22 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     return usedPunctiationMarks.length > 0;
   }
 
-  generateNewSentence() {
+  async generateNewSentence() {
+    this.setCursorPositionToEnd();
     this.disableSheet();
     this.promptCounter++;
-    const sentance = this.promptService.generateSentence();
-    const story = this.formGroup.get('story')?.value;
-    this.formGroup.get('story')?.setValue(story + sentance);
+    const sentance = this.promptService.generateFirstSchredingerSentence();
+    await this.displayNewSentence(sentance);
     this.lockedContentLastIndex = this.formGroup.get('story')?.value.length;
     this.enableSheet();
+  }
+
+  async displayNewSentence(sentance: string) {
+    const newSentenceChars = sentance.split('');
+    for (let i = 0; i < newSentenceChars.length; i++) {
+      this.formGroup.get('story')?.setValue(this.formGroup.get('story')?.value + newSentenceChars[i]);
+      await wait(50);
+    }
   }
 
   onSubmit() {

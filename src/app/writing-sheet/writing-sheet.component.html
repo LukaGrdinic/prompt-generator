@@ -9,7 +9,10 @@
       <timer [seconds]="600" *ngIf="isTimerVisible" (timeEnded)="timeEnded()"></timer>
     </div>
 
-    <!-- Writing sheet with word count -->
+    <!-- Writing sheet with word count --> 
+    <!-- We should replace textarea with a <div contenteditable="true"> and this way enable rich text usage inside of div.
+      Then make sure to prepare the contenteditable div for angular material usage with matInput
+      This will also help with  the problem of missing caret while textarea is disabled.  -->
     <form #form="ngForm" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
       <mat-form-field class="form-field-full-width">
         <textarea
@@ -20,7 +23,7 @@
           #story
           rows="20"
           matInput
-        ></textarea>
+        ></textarea> 
         <span class="folded-sheet"></span>
         <mat-hint class="folded-sheet-hint" *ngIf="story.value" align="end">{{ story.value | wordCount }}/{{minWordCount}}</mat-hint>
       </mat-form-field>
