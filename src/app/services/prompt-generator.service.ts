@@ -4,6 +4,55 @@ import { Injectable } from '@angular/core';
 export class PromptGeneratorService {
   constructor() {}
 
+  generateFirstSchredingerSentence() {
+    const sentences = [
+      `"And with the cat at home, it simply isn't viable at the moment", said Jen.`,
+      `"Apatow... Why does that sound familiar?" - Greg mumbled while snatching the last canapé bite off the gawkishly tall server's tray. `,
+      `Mr. Collins would always complain about how tired he was, so much so that it became white noise to those around him. `,
+      `Mrs. Thompson had a habit of misplacing her glasses, only to find them in the most unexpected places, sparking small adventures in her otherwise unworldly days.`,
+      `The sound of the old piano from 5B filled the building every Thursday night, a mystery performance that became the soundtrack of their lives.`,
+      `For years, the daily crossword puzzle in the local paper had been Greg's solitary refuge until he noticed someone else was filling it out, one clue ahead of him.`,
+      `Despite their antics being typical of childish shenanigans, the old grumpy man just couldn't let this one slide.`,
+      `I wish these were a heartwarming quest to discover my true self, but alas, I find myself in the dreaded waiting room yet again.`,
+      `In the background, the weatherman was mumbling in ambigouous platitudes - a language familiar to those uneager to challenge the status quo.`,
+      `One sleepless night after another, he'd try to find relief in a feeble conviction that he did it for greater good.`,
+      `Underneath her laughter, a truth was buried, not harsh, but undeniable.`,
+    ];
+    return this.randomize(sentences);
+  }
+  generateSecondSchredingerSentence() {
+    const sentences = [
+      `But that was before the secret was out.`,
+      `With a single sentence, the past and future collided.`,
+      `The message was clear, yet its implications were unimaginable.`,
+      `Facing the mirror, the reflection posed an impossible question.`,
+      `In the blink of an eye, alliances shifted in a way no one saw coming.`,
+      `Oh, dear reader, I digress, as I often do.`,
+      `Wait - was I the only one in the dark this whole time?`,
+      `I can think of a thousand funny things right now; yes - I do feel deeply inappropriate.`,
+      `A freshly baked cookie seemed like a perfect remedy.`,
+      `Could it have been merely a dream?`,
+      `A mere distraction: a brainwashed escape, absurdly foolish frolicking is all it was!`,
+    ];
+    return this.randomize(sentences);
+  }
+  generateThirdSchredingerSentence() {
+    const sentences = [
+      `Didn't I tell you a million times:`,
+      `If that is the way you want it to be - fine!`,
+      `Or did I make it all up?`,
+      `All along, I thought you were on my side.`,
+      `But can you trust me?`,
+      `You know what, I changed my mind.`,
+      `I don't ruin things - do I?`,
+      `If only I could tell you what truly happenned.`,
+      `Either that, or we're all tripping rainbows.`,
+      `Could I elaborate? `,
+      `I can hear my mother's voice...`,
+    ];
+    return this.randomize(sentences);
+  }
+
   generateSentence(): string {
     return this.generateCharacterSentence();
   }
