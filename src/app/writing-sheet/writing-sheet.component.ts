@@ -105,7 +105,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     await this.prepareWritingEnvironment();
     this.displayTimer();
     this.trackStoryContentChanges();
-    this.generateNewSentence();
+    this.generateNewSentence(true);
   }
 
   updateHeadingInnerText(innerText: string) {
@@ -224,11 +224,12 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     return usedPunctiationMarks.length > 0;
   }
 
-  async generateNewSentence() {
+  async generateNewSentence(isFirstSentence = false) {
     this.setCursorPositionToEnd();
     this.disableSheet();
     this.promptCounter++;
-    const sentance = this.promptService.generateSchredingerSentence();
+    const whiteSpaceAfterDot = " ";
+    const sentance = isFirstSentence ? this.promptService.generateSchredingerSentence() : (whiteSpaceAfterDot + this.promptService.generateSchredingerSentence());
     await this.displayNewSentence(sentance);
     this.lockedContentLastIndex = this.formGroup.get('story')?.value.length;
     this.enableSheet();
