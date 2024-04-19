@@ -2,7 +2,27 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class PromptGeneratorService {
+
+  schredingerSentenceCount = 0;
+
   constructor() {}
+
+
+  generateSchredingerSentence() {
+    switch (this.schredingerSentenceCount) {
+      case 0:
+        this.schredingerSentenceCount++;
+        return this.generateFirstSchredingerSentence();
+      case 1:
+        this.schredingerSentenceCount++;
+        return this.generateSecondSchredingerSentence();
+      case 2:
+        this.schredingerSentenceCount++;
+        return this.generateThirdSchredingerSentence();
+      default:
+        return this.generateFirstSchredingerSentence();
+    }
+  }
 
   generateFirstSchredingerSentence() {
     const sentences = [

@@ -228,7 +228,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     this.setCursorPositionToEnd();
     this.disableSheet();
     this.promptCounter++;
-    const sentance = this.promptService.generateFirstSchredingerSentence();
+    const sentance = this.promptService.generateSchredingerSentence();
     await this.displayNewSentence(sentance);
     this.lockedContentLastIndex = this.formGroup.get('story')?.value.length;
     this.enableSheet();
