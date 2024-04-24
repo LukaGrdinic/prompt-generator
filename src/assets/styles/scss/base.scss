@@ -53,3 +53,11 @@ button {
   font-style: normal;
   font-size: 16px;
 }
+
+footer {
+  padding: 1.5rem;
+  background-color: var(--seashellBeige);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
