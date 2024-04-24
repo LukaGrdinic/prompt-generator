@@ -45,6 +45,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   formGroup!: FormGroup;
 
   isTimerVisible = false;
+  isFoldedSheetVisible = false;
   minWordCount = 300;
   promptCounter = 0;
   lockedContentLastIndex = 0;
@@ -101,9 +102,14 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     this.isTimerVisible = true;
   }
 
+  displayFoldedSheet() {
+    this.isFoldedSheetVisible = true;
+  }
+
   async startChallenge() {
     await this.prepareWritingEnvironment();
     this.displayTimer();
+    this.displayFoldedSheet();
     this.trackStoryContentChanges();
     this.generateNewSentence(true);
   }

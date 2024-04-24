@@ -1,6 +1,12 @@
 .flex {
   display: flex;
 }
+.flex-column {
+  flex-direction: column;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
 .flex-1 {
   flex: 1;
 }
@@ -27,4 +33,13 @@
 }
 .justify-end {
   justify-content: flex-end;
+}
+
+@media screen and (max-width: 768px) {
+  .mobile-flex-full-width {
+    flex: 0 0 100%;
+  }
+  .mobile-flex-column {
+    flex-direction: column;
+  }
 }

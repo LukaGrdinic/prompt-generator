@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,7 @@ import { RouterModule } from '@angular/router';
   imports: [
     MatToolbarModule,
     MatButtonModule,
+    MatMenuModule,
     RouterModule
   ]
 })

@@ -4,7 +4,7 @@
       <a class="text-decoration-none text-white uppercase" routerLink="/"
         >Home</a
       >
-      <div class="flex align-center gap-1 uppercase">
+      <div class="flex mobile-hidden align-center gap-1 uppercase">
         <ul class="list-horizontal text-white">
           <li>
             <a class="text-decoration-none text-white" routerLink="/"
@@ -26,7 +26,15 @@
           </li>
         </ul>
         <button class="button uppercase">Sign Up Free</button>
-      </div> 
+      </div>
+      <button class="desktop-hidden" mat-button [matMenuTriggerFor]="menu">Menu</button>
+      <mat-menu #menu="matMenu">
+          <a mat-menu-item class="text-decoration-none" routerLink="/">Prompts</a>
+          <a mat-menu-item class="text-decoration-none" routerLink="/">Library</a>
+          <a mat-menu-item class="text-decoration-none" routerLink="/">About Us</a >
+          <a mat-menu-item class="text-decoration-none" routerLink="/">Login</a>
+        <button mat-menu-item class="button uppercase">Sign Up Free</button>
+      </mat-menu>
     </div>
   </mat-toolbar>
 </header>
@@ -34,7 +42,7 @@
   <router-outlet></router-outlet>
 </main>
 <footer>
-  <span></span>
+  <span class="mobile-hidden"></span>
   <span class="text-center">torturously brought to you by <br aria-hidden="true" /> <a class="text-tomato-orange font-weight-700 fs-1-5-em text-decoration-none" href="#">mau.</a></span>
   <a href="#">Privacy Policy</a>
 </footer>

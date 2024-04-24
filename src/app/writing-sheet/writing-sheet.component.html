@@ -24,7 +24,7 @@
           rows="20"
           matInput
         ></textarea> 
-        <span class="folded-sheet"></span>
+        <span *ngIf="isFoldedSheetVisible" class="folded-sheet"></span>
         <mat-hint class="folded-sheet-hint" *ngIf="story.value" align="end">{{ story.value | wordCount }}/{{minWordCount}}</mat-hint>
       </mat-form-field>
 
