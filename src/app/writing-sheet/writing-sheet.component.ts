@@ -44,6 +44,9 @@ import { DarkTheme, ThemeService } from '../services/theme.service';
 export class WritingSheetComponent implements OnInit, AfterViewInit{
   formGroup!: FormGroup;
 
+  isStoryFinished = false;
+  isStorySuccess = false;
+  isStoryFailure = false;
   isTimerVisible = false;
   isFoldedSheetVisible = false;
   minWordCount = 300;
@@ -100,6 +103,10 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
 
   displayTimer() {
     this.isTimerVisible = true;
+  }
+
+  hideTimer() {
+    this.isTimerVisible = false;
   }
 
   displayFoldedSheet() {
@@ -265,6 +272,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   timeEnded() {
     this.disableSheet();
     this.isTimerVisible = false;
+    this.isStoryFinished = true;
     this.displayResults();
   }
   displayResults() {
@@ -272,10 +280,10 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     const wordCount = calculateWordCount(story);
     if (wordCount > this.minWordCount) {
       this.updateHeadingInnerText('Well, you actually did it.');
-      this.updateSubheadingInnerText('Bravo! Copy your story and continue working on it—or store it at the bottom of the cringe pile, you be the judge of that.')
+      this.isStorySuccess = true;
     } else {
       this.updateHeadingInnerText('Are you OK?');
-      this.updateSubheadingInnerText('Well, time is up and you don’t seem to have successfully completed the task. In case we didn’t bore you to death, why not try again?')
+      this.isStoryFailure = true;
     }
   }
 }
