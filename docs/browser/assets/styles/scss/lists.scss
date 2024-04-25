@@ -1,0 +1,36 @@
+.list-horizontal {
+  list-style-type: none;
+  display: flex;
+  gap: 1rem;
+}
+.list-vertical {
+  display: flex;
+  flex-direction: column;
+}
+.list-bullets-purple {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.list-bullets-purple li {
+  position: relative;
+  padding-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.list-bullets-purple li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  background: center / contain no-repeat url('/assets/images/bullet_point.png') ;
+}
+
+
+@media screen and (max-width: 768px) {
+  .mobile-list-vertical {
+    display: flex;
+    flex-direction: column;
+  }
+}
