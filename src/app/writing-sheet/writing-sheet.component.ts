@@ -2,8 +2,8 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  OnInit,
   ViewChild,
+  inject,
 } from '@angular/core';
 import { PromptGeneratorService } from '../services/prompt-generator.service';
 import {
@@ -22,7 +22,16 @@ import { TimerComponent } from '../timer/timer.component';
 import { CommonModule } from '@angular/common';
 import { WordCountPipe } from '../word-count.pipe';
 import { DarkTheme, ThemeService } from '../services/theme.service';
+import {
+  MatSnackBar,
+  MatSnackBarModule,
+  MatSnackBarRef,
+  MatSnackBarAction,
+  MatSnackBarActions,
+  MatSnackBarLabel,
+} from '@angular/material/snack-bar';
 
+/* TODO: Make the whole experince accessible */
 @Component({
   selector: 'writing-sheet',
   templateUrl: './writing-sheet.component.html',
@@ -35,13 +44,14 @@ import { DarkTheme, ThemeService } from '../services/theme.service';
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    MatSnackBarModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
   ],
   providers: [PromptGeneratorService],
 })
-export class WritingSheetComponent implements OnInit, AfterViewInit{
+export class WritingSheetComponent implements AfterViewInit {
   formGroup!: FormGroup;
 
   isStoryFinished = false;
@@ -49,6 +59,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   isStoryFailure = false;
   isTimerVisible = false;
   isFoldedSheetVisible = false;
+
   minWordCount = 300;
   promptCounter = 0;
   lockedContentLastIndex = 0;
@@ -59,24 +70,20 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
 
   @ViewChild('story') storyElementRef!: ElementRef;
   @ViewChild('heading') headingElementRef!: ElementRef;
-  @ViewChild('subheading') subheadingElementRef!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
     private promptService: PromptGeneratorService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private snackBar: MatSnackBar
   ) {
     this.formGroup = this.fb.group({
       story: '',
     });
   }
 
-  ngOnInit() {
- 
-  }
-
   ngAfterViewInit() {
-   this.startChallenge();
+    this.startChallenge();
   }
 
   async prepareWritingEnvironment() {
@@ -90,6 +97,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
 
   async displayHeading() {
     this.disableSheet();
+    this.updateHeadingInnerText('Get Ready...');
     await wait(1000);
     this.updateHeadingInnerText('3...');
     await wait(1000);
@@ -113,6 +121,10 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     this.isFoldedSheetVisible = true;
   }
 
+  hideFoldedSheet() {
+    this.isFoldedSheetVisible = false;
+  }
+
   async startChallenge() {
     await this.prepareWritingEnvironment();
     this.displayTimer();
@@ -123,9 +135,6 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
 
   updateHeadingInnerText(innerText: string) {
     this.headingElementRef.nativeElement.innerText = innerText;
-  }
-  updateSubheadingInnerText(innerText: string) {
-    this.subheadingElementRef.nativeElement.innerText = innerText;
   }
 
   onClick(event: any) {
@@ -165,7 +174,8 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
       } else if ([KeyCodes.Backspace, KeyCodes.Delete].includes(event.which)) {
         this.isBackspaceHeld = false;
         this.handleDeletionWhenBackspaceHeld();
-      } else if ([
+      } else if (
+        [
           KeyCodes.ArrowDown,
           KeyCodes.ArrowLeft,
           KeyCodes.ArrowRight,
@@ -226,7 +236,7 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
 
   checkStoryWordCountCheckpoint(story: string) {
     const wordCount = calculateWordCount(story);
-    return wordCount > 100  * this.promptCounter;
+    return wordCount > 100 * this.promptCounter;
   }
 
   checkIfStorySentenceEnded(story: string) {
@@ -241,8 +251,10 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
     this.setCursorPositionToEnd();
     this.disableSheet();
     this.promptCounter++;
-    const whiteSpaceAfterDot = " ";
-    const sentance = isFirstSentence ? this.promptService.generateSchredingerSentence() : (whiteSpaceAfterDot + this.promptService.generateSchredingerSentence());
+    const whiteSpaceAfterDot = ' ';
+    const sentance = isFirstSentence
+      ? this.promptService.generateSchredingerSentence()
+      : whiteSpaceAfterDot + this.promptService.generateSchredingerSentence();
     await this.displayNewSentence(sentance);
     this.lockedContentLastIndex = this.formGroup.get('story')?.value.length;
     this.enableSheet();
@@ -252,7 +264,9 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
   async displayNewSentence(sentance: string) {
     const newSentenceChars = sentance.split('');
     for (let i = 0; i < newSentenceChars.length; i++) {
-      this.formGroup.get('story')?.setValue(this.formGroup.get('story')?.value + newSentenceChars[i]);
+      this.formGroup
+        .get('story')
+        ?.setValue(this.formGroup.get('story')?.value + newSentenceChars[i]);
       await wait(50);
     }
   }
@@ -286,4 +300,71 @@ export class WritingSheetComponent implements OnInit, AfterViewInit{
       this.isStoryFailure = true;
     }
   }
+
+  copyToClipboard() {
+    const value = this.formGroup.get('story')?.value;
+    navigator.clipboard.writeText(value);
+    this.openSnackBar();
+  }
+
+  restartChallenge() {
+    this.resetSchredingerSentenceCount();
+    this.clearForm();
+    this.hideTimer();
+    this.hideFoldedSheet();
+    this.resetVariables();
+    this.startChallenge();
+  }
+
+  resetVariables() {
+    this.isStoryFinished = false;
+    this.isStorySuccess = false;
+    this.isStoryFailure = false;
+    this.isTimerVisible = false;
+    this.isFoldedSheetVisible = false;
+    this.minWordCount = 300;
+    this.promptCounter = 0;
+    this.lockedContentLastIndex = 0;
+    this.storyBeforeKeyUp = '';
+    this.storyBeforeBackspaceKeyUp = '';
+    this.cursorPosition = 0;
+    this.isBackspaceHeld = false;
+  }
+
+  clearForm() {
+    this.formGroup.get('story')?.setValue('');
+  }
+
+  resetSchredingerSentenceCount() {
+    this.promptService.resetSchredingerSentenceCount();
+  }
+
+  openSnackBar() {
+    this.snackBar.openFromComponent(CopiedToClipboardSnackbarComponent, {
+      duration: 3000,
+    });
+  }
+}
+
+/* TODO: Make it accessible as alert */
+@Component({
+  selector: 'snack-bar-annotated-component-example-snack',
+  template: `
+    <span class="text-center text-white" matSnackBarLabel>Copied to clipboard!</span>
+  `,
+  styles: `
+    :host {
+      display: flex;
+    }
+  `,
+  standalone: true,
+  imports: [
+    MatButtonModule,
+    MatSnackBarLabel,
+    MatSnackBarActions,
+    MatSnackBarAction,
+  ],
+})
+export class CopiedToClipboardSnackbarComponent {
+  snackBarRef = inject(MatSnackBarRef);
 }

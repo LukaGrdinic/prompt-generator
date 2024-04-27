@@ -1,13 +1,13 @@
 <div>
   <div class="container">
-    <h1 #heading>Get Ready...</h1>
+    <h1 #heading></h1>
     <p *ngIf="isStoryFinished && isStorySuccess" class="text-white">Bravo! Copy your story and continue working on it—or store it at the bottom of the cringe pile, you be the judge of that.</p>
     <p *ngIf="isStoryFinished && isStoryFailure" class="text-white">Well, time is up and you don’t seem to have successfully completed the task. In case we didn’t bore you to death, why not try again?</p>
 
     <!-- Timer -->
 
     <div class="flex justify-end">
-      <timer [seconds]="15" *ngIf="isTimerVisible" (timeEnded)="timeEnded()"></timer>
+      <timer [seconds]="900" *ngIf="isTimerVisible" (timeEnded)="timeEnded()"></timer>
     </div>
 
     <!-- Writing sheet with word count --> 
@@ -26,16 +26,17 @@
           matInput
         ></textarea> 
         <span *ngIf="isFoldedSheetVisible" class="folded-sheet"></span>
-        <div *ngIf="isStoryFinished" class="text-center">
-          <button aria-label="Copy the text of the story to clipboard" style="height: 100px; width: 100px;" class="button-alt button-rounded mx-1">
-            <i style="font-size: 50px;" class="fa-regular fa-copy"></i>
-          </button>
-          <button aria-label="Restart the challenge" style="height: 100px; width: 100px;" class="button-alt button-rounded mx-1">
-            <i style="font-size: 50px;" class="fa-solid fa-rotate-right"></i>
-          </button>
-        </div>
         <mat-hint class="folded-sheet-hint" *ngIf="story.value" align="end">{{ story.value | wordCount }}/{{minWordCount}}</mat-hint>
       </mat-form-field>
+      <div *ngIf="isStoryFinished" class="text-center" style="transform: translateY(-140px);">
+        <button
+        (click)="copyToClipboard()" aria-label="Copy the text of the story to clipboard" style="height: 100px; width: 100px;" class="button-alt button-rounded mx-1">
+          <i style="font-size: 50px;" class="fa-regular fa-copy"></i>
+        </button>
+        <button (click)="restartChallenge()" aria-label="Restart the challenge" style="height: 100px; width: 100px;" class="button-alt button-rounded mx-1">
+          <i style="font-size: 50px;" class="fa-solid fa-rotate-right"></i>
+        </button>
+      </div>
     </form>
   </div>
 </div>
