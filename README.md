@@ -18,6 +18,10 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 Run `ng build` to build the project. Then run `lite-server --baseDir=dist/prompt-generator/browser`
 
+#### Building for production for GH pages
+
+Go to gh-pages branch. Then run `ng build --output-path docs --base-href /prompt-generator/` to build the project. Afterwards, move the content of /docs/browser to /docs
+
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).

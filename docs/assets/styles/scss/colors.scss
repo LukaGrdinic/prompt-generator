@@ -1,0 +1,36 @@
+// Colors
+
+$tomatoOrange: #ff674d;
+$englishVioletPurple: #493657;
+$seashellBeige: #fff4ec;
+$sunflowerYellow: #ffcc00;
+
+// Backgrounds
+
+.bg-peach {
+  background-color: $tomatoOrange !important;
+}
+.bg-english-violet-purple {
+  background-color: $englishVioletPurple !important;
+}
+.bg-transparent {
+  background-color: transparent !important;
+}
+
+// Text colors
+
+.text-tomato-orange {
+  color: $tomatoOrange !important;
+}
+.text-english-violet-purple {
+  color: $englishVioletPurple !important;
+}
+.text-seashell-beige {
+  color: $seashellBeige !important;
+}
+.text-sunflower-yellow {
+  color: $sunflowerYellow !important;
+}
+.text-white {
+  color: #fff !important;
+}
