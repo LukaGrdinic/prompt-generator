@@ -7,6 +7,9 @@ export class PromptGeneratorService {
 
   constructor() {}
 
+  resetSchredingerSentenceCount() {
+    this.schredingerSentenceCount = 0;
+  }
 
   generateSchredingerSentence() {
     switch (this.schredingerSentenceCount) {
