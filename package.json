@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy": "ng build --output-path docs --base-href /prompt-generator/ && cd docs && xcopy browser . /e && rd /s /q browser && copy index.html 404.html"
   },
   "private": true,
   "dependencies": {
