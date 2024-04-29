@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { LightTheme, ThemeService } from '../services/theme.service';
+import { NgxDynamicHeadingsModule } from 'ngx-dynamic-headings';
 
 @Component({
   selector: 'instructions',
@@ -10,6 +11,7 @@ import { LightTheme, ThemeService } from '../services/theme.service';
   standalone: true,
   imports: [
     MatButtonModule,
+    NgxDynamicHeadingsModule,
     RouterModule
   ]
 })

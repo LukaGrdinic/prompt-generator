@@ -30,6 +30,7 @@ import {
   MatSnackBarActions,
   MatSnackBarLabel,
 } from '@angular/material/snack-bar';
+import { NgxDynamicHeadingsModule } from 'ngx-dynamic-headings';
 
 /* TODO: Make the whole experince accessible */
 @Component({
@@ -47,6 +48,7 @@ import {
     MatSnackBarModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxDynamicHeadingsModule,
     RouterModule,
   ],
   providers: [PromptGeneratorService],
