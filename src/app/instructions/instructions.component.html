@@ -1,16 +1,18 @@
 <div class="h-100 pt-1 pb-3">
   <div class="container">
-    <div class="flex flex-wrap gap-3">
-      <div class="flex-1 mobile-flex-full-width">
-        <b class="uppercase">15-minute writing exercise</b>
-        <h1>Write Your Worst Story Yet</h1>
-        <p>
-          Abandon your principles, exit your tortutred soul roule for 15
-          minutes, and write something for a change. Come on, Camus, chop-chop.
-        </p>
+    <section class="flex flex-wrap gap-5 mb-5 mt-3">
+      <div class="flex-1 mobile-flex-full-width flex flex-column justify-between">
+        <div>
+          <b class="uppercase">15-minute writing exercise</b>
+          <h>Write Your Worst Story Yet</h>
+          <p>
+            Abandon your principles, exit your tortutred soul role for 15
+            minutes, and write something for a change. <br aria-hidden="true" /> Come on, Camus, chop-chop.
+          </p>
+        </div>
         <button
           routerLink="/schroedinger-challenge-writing"
-          class="button uppercase"
+          class="button align-self-start uppercase font-weight-700"
         >
           Start Writing
         </button>
@@ -22,12 +24,12 @@
           alt="A scribble of cavemen drawing on walls"
         />
       </div>
-    </div>
+    </section>
 
-    <div class="flex flex-wrap gap-3 mt-3">
+    <section class="flex flex-wrap gap-5 mt-3">
       <div class="flex-1 mobile-flex-full-width">
         <h2>The Rulebook</h2>
-        <p>
+        <p class="mb-2">
           For the next 15 minutes, your only mission will be to finish a
           300-word short story.
         </p>
@@ -55,20 +57,22 @@
         </ul>
         <p>Follow the button to, well, start writing. Have fun, you!</p>
       </div>
-      <div class="flex-1 mobile-flex-full-width">
-        <div class="bg-english-violet-purple text-center text-white p-2">
-          <h3>Stop procrastinating.</h3>
-          <img class="w-100 pb-2" src="assets/images/scribble.png" alt="A scribble" />
+      <div class="flex-1 mobile-flex-full-width flex">
+      <div class="flex-1 bg-english-violet-purple text-center text-white p-2 border-radius-2 flex flex-column justify-center">
           <div>
-            <button
-              class="button-alt uppercase"
-              routerLink="/schroedinger-challenge-writing"
-            >
-              Start Writing
-            </button>
+            <h3 class="text-white">Stop procrastinating.</h3>
+            <img class="w-350px max-w-100 pb-2" src="assets/images/scribble.png" alt="A scribble" />
+            <div>
+              <button
+                class="button-tomatoorange uppercase font-weight-700"
+                routerLink="/schroedinger-challenge-writing"
+              >
+                Start Writing
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </div>
