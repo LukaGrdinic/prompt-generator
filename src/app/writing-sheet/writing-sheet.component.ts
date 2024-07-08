@@ -16,7 +16,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { KeyCodes } from '../enums/KeyCodes.enum';
 import { wait, calculateWordCount } from '../../utils/utils';
 import { TimerComponent } from '../timer/timer.component';
 import { CommonModule } from '@angular/common';
@@ -62,16 +61,13 @@ export class WritingSheetComponent implements AfterViewInit {
   isTimerVisible = false;
   isFoldedSheetVisible = false;
 
+  wordCount = 0;
   minWordCount = 300;
   promptCounter = 0;
-  lockedContentLastIndex = 0;
-  storyBeforeKeyUp = '';
-  storyBeforeBackspaceKeyUp = '';
-  cursorPosition = 0;
-  isBackspaceHeld = false;
 
   @ViewChild('story') storyElementRef!: ElementRef;
   @ViewChild('heading') headingElementRef!: ElementRef;
+  @ViewChild('customTextArea') customTextAreaRef!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -98,7 +94,6 @@ export class WritingSheetComponent implements AfterViewInit {
   }
 
   async displayHeading() {
-    this.disableSheet();
     this.updateHeadingInnerText('Get Ready...');
     await wait(1000);
     this.updateHeadingInnerText('3...');
@@ -108,7 +103,6 @@ export class WritingSheetComponent implements AfterViewInit {
     this.updateHeadingInnerText('1...');
     await wait(1000);
     this.updateHeadingInnerText('You’re on.');
-    this.enableSheet();
   }
 
   displayTimer() {
@@ -131,114 +125,33 @@ export class WritingSheetComponent implements AfterViewInit {
     await this.prepareWritingEnvironment();
     this.displayTimer();
     this.displayFoldedSheet();
-    this.trackStoryContentChanges();
-    this.generateNewSentence(true);
+    this.trackCustomTextAreaChanges();
+    this.generateNewSentence();
   }
 
   updateHeadingInnerText(innerText: string) {
     this.headingElementRef.nativeElement.innerText = innerText;
   }
 
-  onClick(event: any) {
-    this.cursorPosition = event.target.selectionStart;
-    if (this.cursorPosition < this.lockedContentLastIndex) {
-      this.setCursorPositionToEnd();
-    }
-  }
-
-  onKeyDown(event: any) {
-    this.captureBeforeKeyUp();
-    // TODO: Make sure the user cant hold down delete or backspace key and just delete many characters
-    this.cursorPosition = event.target.selectionStart;
-    if (this.cursorPosition <= this.lockedContentLastIndex) {
-      if ([KeyCodes.Shift].includes(event.which)) {
-        this.setCursorPositionToEnd();
-      } else if ([KeyCodes.Backspace, KeyCodes.Delete].includes(event.which)) {
-        /* TODO: Handle situation when backspace is held for a long time */
-        if (!this.isBackspaceHeld) {
-          this.storyBeforeBackspaceKeyUp = this.formGroup.get('story')?.value;
-          this.isBackspaceHeld = true;
+  trackCustomTextAreaChanges() {
+    console.log(this.customTextAreaRef.nativeElement);
+    this.customTextAreaRef.nativeElement.addEventListener(
+      'input',
+      (event: InputEvent) => {
+        const story = this.customTextAreaRef.nativeElement.innerText;
+        if (
+          this.checkStoryWordCountCheckpoint(story) &&
+          this.checkIfStorySentenceEnded(story)
+        ) {
+          this.generateNewSentence();
         }
       }
-    }
-  }
-
-  captureBeforeKeyUp() {
-    this.storyBeforeKeyUp = this.formGroup.get('story')?.value;
-  }
-
-  onKeyUp(event: any) {
-    this.cursorPosition = event.target.selectionStart;
-    if (this.cursorPosition < this.lockedContentLastIndex) {
-      // if control key is being held
-      if (event.ctrlKey) {
-        this.setCursorPositionToEnd();
-      } else if ([KeyCodes.Backspace, KeyCodes.Delete].includes(event.which)) {
-        this.isBackspaceHeld = false;
-        this.handleDeletionWhenBackspaceHeld();
-      } else if (
-        [
-          KeyCodes.ArrowDown,
-          KeyCodes.ArrowLeft,
-          KeyCodes.ArrowRight,
-          KeyCodes.ArrowUp,
-          KeyCodes.Shift,
-          KeyCodes.Control,
-          KeyCodes.Home,
-          KeyCodes.End,
-        ].includes(event.which)
-      ) {
-        this.setCursorPositionToEnd();
-      } else if (
-        // event keycode is enter
-        [KeyCodes.Enter].includes(event.which)
-      ) {
-        // do nothing
-      } else {
-        this.handleCharactersAdded(this.cursorPosition);
-      }
-    }
-  }
-
-  setCursorPositionToEnd() {
-    const story = this.formGroup.get('story')?.value;
-    const storyLength = story.length;
-    this.storyElementRef.nativeElement.focus();
-    this.storyElementRef.nativeElement.setSelectionRange(
-      storyLength,
-      storyLength
     );
   }
 
-  handleDeletionWhenBackspaceHeld() {
-    this.formGroup.get('story')?.setValue(this.storyBeforeBackspaceKeyUp);
-  }
-
-  handleCharactersAdded(cursorPosition: number) {
-    // delete the caracter at the cursorPosition and set the cursor position to the end of the locked content
-    const story: string = this.formGroup.get('story')?.value;
-    // trigger undo action
-    const storyBeforeCursor = story.slice(0, cursorPosition);
-    const storyAfterCursor = story.slice(cursorPosition);
-    const storyBeforeCursorWithoutLastChar = storyBeforeCursor.slice(0, -1);
-    const newStory = storyBeforeCursorWithoutLastChar + storyAfterCursor;
-    this.formGroup.get('story')?.setValue(newStory);
-  }
-
-  trackStoryContentChanges() {
-    this.formGroup.get('story')?.valueChanges.subscribe((story) => {
-      if (
-        this.checkStoryWordCountCheckpoint(story) &&
-        this.checkIfStorySentenceEnded(story)
-      ) {
-        this.generateNewSentence();
-      }
-    });
-  }
-
   checkStoryWordCountCheckpoint(story: string) {
-    const wordCount = calculateWordCount(story);
-    return wordCount > 100 * this.promptCounter;
+    this.wordCount = calculateWordCount(story);
+    return this.wordCount > 100 * this.promptCounter;
   }
 
   checkIfStorySentenceEnded(story: string) {
@@ -249,50 +162,57 @@ export class WritingSheetComponent implements AfterViewInit {
     return usedPunctiationMarks.length > 0;
   }
 
-  async generateNewSentence(isFirstSentence = false) {
-    this.setCursorPositionToEnd();
-    this.disableSheet();
-    this.promptCounter++;
-    const whiteSpaceAfterDot = ' ';
-    const sentance = isFirstSentence
-      ? this.promptService.generateSchredingerSentence()
-      : whiteSpaceAfterDot + this.promptService.generateSchredingerSentence();
-    await this.displayNewSentence(sentance);
-    this.lockedContentLastIndex = this.formGroup.get('story')?.value.length;
-    this.enableSheet();
-    this.setCursorPositionToEnd();
+  createContentEditableSpan(editable: boolean) {
+    const span = document.createElement('span');
+    span.contentEditable = editable.toString();
+    return span;
   }
 
-  async displayNewSentence(sentance: string) {
-    const newSentenceChars = sentance.split('');
-    for (let i = 0; i < newSentenceChars.length; i++) {
-      this.formGroup
-        .get('story')
-        ?.setValue(this.formGroup.get('story')?.value + newSentenceChars[i]);
+  async animateSentence(span: HTMLSpanElement, sentance: string) {
+    const sentanceChars = sentance.split('');
+    for (let i = 0; i < sentanceChars.length; i++) {
+      span.innerText += sentanceChars[i];
       await wait(50);
     }
   }
 
-  onSubmit() {
-    console.log(this.formGroup.value);
+  renderNewSentence() {
+    const span = this.createContentEditableSpan(false);
+    this.customTextAreaRef.nativeElement.appendChild(span);
+    const sentance = this.promptService.generateSchredingerSentence();
+    this.animateSentence(span, sentance);
   }
 
-  disableSheet() {
-    this.formGroup.get('story')?.disable({ emitEvent: false });
+  lockPreviousContent() {
+    const contentSpansArray: HTMLSpanElement[] = Array.from(
+      this.customTextAreaRef.nativeElement.children
+    );
+    contentSpansArray.forEach((span) => {
+      span.contentEditable = 'false';
+    });
   }
 
-  enableSheet() {
-    this.formGroup.get('story')?.enable({ emitEvent: false });
+  renderMoreTextArea() {
+    const editableSpan = this.createContentEditableSpan(true);
+    editableSpan.innerText = '';
+    this.customTextAreaRef.nativeElement.appendChild(editableSpan);
+    editableSpan.focus();
+  }
+
+  async generateNewSentence() {
+    this.renderNewSentence();
+    this.lockPreviousContent();
+    this.renderMoreTextArea();
+    this.promptCounter++;
   }
 
   timeEnded() {
-    this.disableSheet();
     this.isTimerVisible = false;
     this.isStoryFinished = true;
     this.displayResults();
   }
   displayResults() {
-    const story = this.formGroup.get('story')?.value;
+    const story = this.customTextAreaRef.nativeElement.innerText;
     const wordCount = calculateWordCount(story);
     if (wordCount > this.minWordCount) {
       this.updateHeadingInnerText('Well, you actually did it.');
@@ -304,14 +224,14 @@ export class WritingSheetComponent implements AfterViewInit {
   }
 
   copyToClipboard() {
-    const value = this.formGroup.get('story')?.value;
-    navigator.clipboard.writeText(value);
+    const story = this.customTextAreaRef.nativeElement.innerText;
+    navigator.clipboard.writeText(story);
     this.openSnackBar();
   }
 
   restartChallenge() {
     this.resetSchredingerSentenceCount();
-    this.clearForm();
+    this.clearCustomTextArea();
     this.hideTimer();
     this.hideFoldedSheet();
     this.resetVariables();
@@ -326,15 +246,15 @@ export class WritingSheetComponent implements AfterViewInit {
     this.isFoldedSheetVisible = false;
     this.minWordCount = 300;
     this.promptCounter = 0;
-    this.lockedContentLastIndex = 0;
-    this.storyBeforeKeyUp = '';
-    this.storyBeforeBackspaceKeyUp = '';
-    this.cursorPosition = 0;
-    this.isBackspaceHeld = false;
   }
 
-  clearForm() {
-    this.formGroup.get('story')?.setValue('');
+  clearCustomTextArea() {
+    const children: HTMLSpanElement[] = Array.from(
+      this.customTextAreaRef.nativeElement.children
+    );
+    children.forEach((child) => {
+      child.remove();
+    });
   }
 
   resetSchredingerSentenceCount() {
@@ -352,7 +272,9 @@ export class WritingSheetComponent implements AfterViewInit {
 @Component({
   selector: 'snack-bar-annotated-component-example-snack',
   template: `
-    <span class="text-center text-white" matSnackBarLabel>Copied to clipboard!</span>
+    <span class="text-center text-white" matSnackBarLabel
+      >Copied to clipboard!</span
+    >
   `,
   styles: `
     :host {
