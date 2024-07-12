@@ -138,10 +138,9 @@ export class WritingSheetComponent implements AfterViewInit {
     this.customTextAreaRef.nativeElement.addEventListener(
       'input',
       (event: InputEvent) => {
-        const story = this.customTextAreaRef.nativeElement.innerText;
         if (
-          this.checkStoryWordCountCheckpoint(story) &&
-          this.checkIfStorySentenceEnded(story)
+          this.checkStoryWordCountCheckpoint() &&
+          this.checkIfStorySentenceEnded()
         ) {
           this.generateNewSentence();
         }
@@ -149,12 +148,17 @@ export class WritingSheetComponent implements AfterViewInit {
     );
   }
 
-  checkStoryWordCountCheckpoint(story: string) {
+  checkStoryWordCountCheckpoint() {
+    const story = this.customTextAreaRef.nativeElement.innerText;
+    if (!story) {
+      return false;
+    }
     this.wordCount = calculateWordCount(story);
     return this.wordCount > 100 * this.promptCounter;
   }
 
-  checkIfStorySentenceEnded(story: string) {
+  checkIfStorySentenceEnded() {
+    const story = this.customTextAreaRef.nativeElement.innerText;
     const punctiationMarks = ['.', '!', '?'];
     const usedPunctiationMarks = punctiationMarks.filter((mark) =>
       story.endsWith(mark)
@@ -173,14 +177,16 @@ export class WritingSheetComponent implements AfterViewInit {
     for (let i = 0; i < sentanceChars.length; i++) {
       span.innerText += sentanceChars[i];
       await wait(50);
+      const story = this.customTextAreaRef.nativeElement.innerText;
+      this.wordCount = calculateWordCount(story);
     }
   }
 
-  renderNewSentence() {
+  async renderNewSentence() {
     const span = this.createContentEditableSpan(false);
     this.customTextAreaRef.nativeElement.appendChild(span);
     const sentance = this.promptService.generateSchredingerSentence();
-    this.animateSentence(span, sentance);
+    await this.animateSentence(span, sentance);
   }
 
   lockPreviousContent() {
@@ -200,8 +206,8 @@ export class WritingSheetComponent implements AfterViewInit {
   }
 
   async generateNewSentence() {
-    this.renderNewSentence();
     this.lockPreviousContent();
+    await this.renderNewSentence();
     this.renderMoreTextArea();
     this.promptCounter++;
   }
@@ -209,6 +215,7 @@ export class WritingSheetComponent implements AfterViewInit {
   timeEnded() {
     this.isTimerVisible = false;
     this.isStoryFinished = true;
+    this.lockPreviousContent();
     this.displayResults();
   }
   displayResults() {
@@ -245,6 +252,7 @@ export class WritingSheetComponent implements AfterViewInit {
     this.isTimerVisible = false;
     this.isFoldedSheetVisible = false;
     this.minWordCount = 300;
+    this.wordCount = 0;
     this.promptCounter = 0;
   }
 
@@ -259,6 +267,13 @@ export class WritingSheetComponent implements AfterViewInit {
 
   resetSchredingerSentenceCount() {
     this.promptService.resetSchredingerSentenceCount();
+  }
+
+  focusTextArea() {
+    const editableSpan = this.customTextAreaRef.nativeElement.querySelector('span[contenteditable="true"]');
+    if (editableSpan) {
+      editableSpan.focus();
+    }
   }
 
   openSnackBar() {
