@@ -54,3 +54,13 @@ $prompt-generator-theme: mat.define-light-theme(
 @import './assets/styles/scss/borders.scss';
 @import './assets/styles/scss/material-custom.scss';
 
+// Put this in separate file
+.custom-textarea span {
+  white-space: pre-wrap;
+}
+.custom-textarea span.prompt {
+  font-weight: 700;
+}
+.custom-textarea span[contenteditable="true"] {
+  outline: none !important;
+}

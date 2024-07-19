@@ -15,29 +15,22 @@
     <!-- We should replace textarea with a <div contenteditable="true"> and this way enable rich text usage inside of div.
       Then make sure to prepare the contenteditable div for angular material usage with matInput
       This will also help with  the problem of missing caret while textarea is disabled.  -->
-    <form #form="ngForm" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-      <mat-form-field class="form-field-full-width">
-        <textarea
-          formControlName="story"
-          (click)="onClick($event)"
-          (keydown)="onKeyDown($event)"
-          (keyup)="onKeyUp($event)"
-          #story
-          rows="20"
-          matInput
-        ></textarea> 
-        <span *ngIf="isFoldedSheetVisible" class="folded-sheet"></span>
-        <mat-hint class="folded-sheet-hint" *ngIf="story.value" align="end">{{ story.value | wordCount }}/{{minWordCount}}</mat-hint>
-      </mat-form-field>
-      <div *ngIf="isStoryFinished" class="text-center" style="transform: translateY(-140px);">
-        <button
-        (click)="copyToClipboard()" aria-label="Copy the text of the story to clipboard" style="height: 100px; width: 100px;" class="button-alt button-rounded mx-1">
-          <i style="font-size: 50px;" class="fa-regular fa-copy"></i>
-        </button>
-        <button (click)="restartChallenge()" aria-label="Restart the challenge" style="height: 100px; width: 100px;" class="button-alt button-rounded mx-1">
-          <i style="font-size: 50px;" class="fa-solid fa-rotate-right"></i>
-        </button>
+    <div (click)="focusTextArea()" class="custom-textarea-wrapper">
+      <div #customTextArea class="bg-white custom-textarea">
       </div>
-    </form>
+      <span *ngIf="isFoldedSheetVisible" class="folded-sheet">
+        <span class="folded-sheet-hint">{{  wordCount }} / {{minWordCount}}</span>
+      </span>
+    </div>
+    <div>
+    <div *ngIf="isStoryFinished" class="text-center" style="transform: translateY(-140px);">
+      <button
+      (click)="copyToClipboard()" aria-label="Copy the text of the story to clipboard" style="height: 100px; width: 100px;" class="button-alt button-rounded mx-1">
+        <i style="font-size: 50px;" class="fa-regular fa-copy"></i>
+      </button>
+      <button (click)="restartChallenge()" aria-label="Restart the challenge" style="height: 100px; width: 100px;" class="button-alt button-rounded mx-1">
+        <i style="font-size: 50px;" class="fa-solid fa-rotate-right"></i>
+      </button>
+    </div>
   </div>
 </div>

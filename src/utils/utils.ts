@@ -6,5 +6,5 @@ export function wait(milliseconds: number) {
 
 export function calculateWordCount(text: string) {
   let words = text.match(/\w+/g) as RegExpMatchArray;
-  return words.length
+  return words?.length;
 }
