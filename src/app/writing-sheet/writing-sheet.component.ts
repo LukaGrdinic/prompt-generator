@@ -184,8 +184,9 @@ export class WritingSheetComponent implements AfterViewInit {
 
   async renderNewSentence() {
     const span = this.createContentEditableSpan(false);
+    span.classList.add('prompt');
     this.customTextAreaRef.nativeElement.appendChild(span);
-    const sentance = this.promptService.generateSchredingerSentence();
+    const sentance = ` ${this.promptService.generateSchredingerSentence()}`;
     await this.animateSentence(span, sentance);
   }
 
