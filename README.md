@@ -20,7 +20,7 @@ Run `ng build` to build the project. Then run `lite-server --baseDir=dist/prompt
 
 #### Building for production for GH pages
 
-Go to gh-pages branch. Then run `ng build --output-path docs --base-href /prompt-generator/` to build the project. Afterwards, move the content of /docs/browser to /docs
+Go to gh-pages branch. Merge main into gh-pages. Then run `npm run deploy`. Commit the newly generated files and push.
 
 ## Running unit tests
 
