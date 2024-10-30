@@ -7,13 +7,28 @@ textarea {
 }
 
 .custom-textarea {
-  height: 380px;
+  height: 500px;
   overflow: auto;
+  background-image: linear-gradient(to bottom, #BEDEFF 1px, transparent 1px);
+  background-size: 100% 40px;
+  background-attachment: local;
+  padding: 5px 10px;
 }
 .custom-textarea-wrapper {
   position: relative;
-  height: 500px;
+  padding-left:100px;
+  padding-top: 100px;
   background-color: white;
+  background-image: 
+    linear-gradient(to right, #E19597 1px, transparent 1px), linear-gradient(to bottom, #E19597 1px, transparent 1px),
+    linear-gradient(to bottom, white 99px, transparent 0), /* Covers up 100px */
+    linear-gradient(to bottom, #BEDEFF 1px, transparent 1px);
+  background-size: 100%, 100%, 100% 100%, 100% 40px,  ;
+  background-position:  
+    99px 0, 0 99px,
+    0 0, 
+    0 100px; 
+  background-repeat:no-repeat, no-repeat, repeat, repeat, ;
 }
 
 .folded-sheet {

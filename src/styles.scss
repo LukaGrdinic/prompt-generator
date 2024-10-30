@@ -57,9 +57,15 @@ $prompt-generator-theme: mat.define-light-theme(
 // Put this in separate file
 .custom-textarea span {
   white-space: pre-wrap;
+  font-size: 20px;
+  line-height: 40px;
+}
+.custom-textarea span:empty {
+  display: inline-block;
 }
 .custom-textarea span.prompt {
   font-weight: 700;
+  display: inline;
 }
 .custom-textarea span[contenteditable="true"] {
   outline: none !important;

@@ -1,25 +1,17 @@
 <header>
   <mat-toolbar class="block text-white bg-transparent">
     <div class="container w-100 flex justify-between align-center">
-      <a class="text-decoration-none text-white uppercase" routerLink="/"
-        >Home</a
-      >
+      <a class="text-decoration-none text-white uppercase" routerLink="/">Home</a>
       <div class="flex mobile-hidden align-center gap-1 uppercase">
         <ul class="list-horizontal text-white">
           <li>
-            <a class="text-decoration-none text-white" routerLink="/"
-              >Prompts</a
-            >
+            <a class="text-decoration-none text-white" routerLink="/">Prompts</a>
           </li>
           <li>
-            <a class="text-decoration-none text-white" routerLink="/"
-              >Library</a
-            >
+            <a class="text-decoration-none text-white" routerLink="/">Library</a>
           </li>
           <li>
-            <a class="text-decoration-none text-white" routerLink="/"
-              >About Us</a
-            >
+            <a class="text-decoration-none text-white" routerLink="/">About Us</a>
           </li>
           <li>
             <a class="text-decoration-none text-white" routerLink="/">Login</a>
@@ -29,10 +21,10 @@
       </div>
       <button class="desktop-hidden" mat-button [matMenuTriggerFor]="menu">Menu</button>
       <mat-menu #menu="matMenu">
-          <a mat-menu-item class="text-decoration-none" routerLink="/">Prompts</a>
-          <a mat-menu-item class="text-decoration-none" routerLink="/">Library</a>
-          <a mat-menu-item class="text-decoration-none" routerLink="/">About Us</a >
-          <a mat-menu-item class="text-decoration-none" routerLink="/">Login</a>
+        <a mat-menu-item class="text-decoration-none" routerLink="/">Prompts</a>
+        <a mat-menu-item class="text-decoration-none" routerLink="/">Library</a>
+        <a mat-menu-item class="text-decoration-none" routerLink="/">About Us</a>
+        <a mat-menu-item class="text-decoration-none" routerLink="/">Login</a>
         <button mat-menu-item class="button uppercase">Sign Up Free</button>
       </mat-menu>
     </div>
@@ -43,6 +35,7 @@
 </main>
 <footer>
   <span class="mobile-hidden"></span>
-  <span class="text-center">torturously brought to you by <br aria-hidden="true" /> <a class="text-tomato-orange font-weight-700 fs-1-5-em text-decoration-none" href="#">mau.</a></span>
+  <span class="text-center">torturously brought to you by <!-- <br aria-hidden="true" />  --><a
+      class="text-tomato-orange font-weight-700 fs-1-5-em text-decoration-none" href="#">mau.</a></span>
   <a href="#">Privacy Policy</a>
 </footer>
